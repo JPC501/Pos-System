@@ -16,11 +16,11 @@
           <li>
             <ul role="list" class="-mx-2 space-y-1">
               <li v-for="item in navigation" :key="item.name">
-                <a
-                  :href="item.href"
+                <router-link
+                  :to="item.href"
                   :class="[
-                    item.current
-                      ? 'bg-gray-50 text-indigo-600'
+                    route.path === item.href
+                      ? 'bg-gray-50 text-indigo-600' // Activo
                       : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600',
                     'group flex gap-x-3 rounded-md p-2 text-sm font-semibold',
                   ]"
@@ -28,15 +28,15 @@
                   <component
                     :is="item.icon"
                     :class="[
-                      item.current
-                        ? 'text-indigo-600'
+                      route.path === item.href
+                        ? 'text-indigo-600' // Ícono activo
                         : 'text-gray-400 group-hover:text-indigo-600',
                       'size-6 shrink-0',
                     ]"
                     aria-hidden="true"
                   />
                   {{ item.name }}
-                </a>
+                </router-link>
               </li>
             </ul>
           </li>
@@ -65,13 +65,13 @@
           <form class="flex-1">
             <button
               type="button"
-              class="rounded-sm bg-green-600 px-4 py-1 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2"
+              class="rounded-sm bg-green-600 px-4 py-1 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 cursor-pointer"
             >
               Crear Venta $
             </button>
             <button
               type="button"
-              class="rounded-sm bg-red-600 px-4 py-1 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 ml-3"
+              class="rounded-sm bg-red-600 px-4 py-1 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 ml-3 cursor-pointer"
             >
               Crear Fiado $
             </button>
@@ -97,15 +97,13 @@
       </div>
 
       <main class="p-8">
-        <EstadoGlobal />
+        <router-view />
       </main>
     </div>
   </div>
 </template>
 
 <script setup>
-import EstadoGlobal from "./vistas-menu/EstadoGlobal.vue";
-
 import { Menu, MenuButton } from "@headlessui/vue";
 import {
   BellIcon,
@@ -118,17 +116,25 @@ import {
   UsersIcon,
 } from "@heroicons/vue/24/outline";
 
+import { useRoute } from "vue-router";
+const route = useRoute();
+
 const navigation = [
-  { name: "Estado Global", href: "#", icon: HomeIcon, current: true },
-  { name: "Vender", href: "#", icon: UsersIcon, current: false },
-  { name: "Inventario", href: "#", icon: FolderIcon, current: false },
-  { name: "Lista Fiados", href: "#", icon: CalendarIcon, current: false },
+  { name: "Estado Global", href: "/", icon: HomeIcon, current: true },
+  { name: "Vender", href: "/vender", icon: UsersIcon, current: false },
+  { name: "Inventario", href: "/inventario", icon: FolderIcon, current: false },
+  {
+    name: "Lista Fiados",
+    href: "/lista-fiados",
+    icon: CalendarIcon,
+    current: false,
+  },
   {
     name: "Empleados",
-    href: "#",
+    href: "/empleados",
     icon: DocumentDuplicateIcon,
     current: false,
   },
-  { name: "Reports", href: "#", icon: ChartPieIcon, current: false },
+  { name: "Reports", href: "/reports", icon: ChartPieIcon, current: false },
 ];
 </script>
